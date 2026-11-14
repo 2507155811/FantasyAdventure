@@ -17,6 +17,7 @@ public class CampaignStageGenerator : MonoBehaviour
     {
         if(world){world.SetActive(false);Destroy(world);}
         foreach(var cut in cuts)if(cut)Destroy(cut);cuts.Clear();
+        Width=map.Safe?64:map.Boss?112:88+map.Id%4*12;
         current=map;world=new GameObject("Region "+map.Id+" "+map.Name);
         var backdrop=new GameObject("Backdrop");backdrop.transform.SetParent(world.transform,false);
         var parallax=backdrop.AddComponent<ForestParallax2D>();parallax.cameraTransform=Camera.main.transform;parallax.cameraTravel=.72f;
@@ -25,26 +26,28 @@ public class CampaignStageGenerator : MonoBehaviour
         {
             var art=Art(backdrop.transform,background,new Vector2(20+i*step,-.6f),1,-20);art.flipX=(i&1)!=0;
         }
-        Ground("Main ground",new Vector2(48,-1),new Vector2(108,1),false);
-        float[] ledges={15,29,43,58,72,85};
-        for(int i=0;i<ledges.Length;i++)
+        Ground("Main ground",new Vector2(Width*.5f-2,-1),new Vector2(Width+8,1),false);
+        int pathCount=map.Safe?3:5+map.Id%3;
+        for(int i=0;i<pathCount;i++)
         {
-            float x=ledges[i]+(map.Id%3-1)*1.2f;
-            Ground("Upper path",new Vector2(x,i%2==0?1.4f:2.1f),new Vector2(4.2f,.5f),true);
+            float x=12+(Width-26)*(i+.5f)/pathCount;
+            float elevation=1.1f+((i+map.Id)%3)*.55f;
+            float span=3.6f+((map.Id+i)%3)*.8f;
+            Ground("Upper path",new Vector2(x,elevation),new Vector2(span,.5f),true);
         }
         // Extend the same earth surface down to the viewport edge; never show a blank strip under the floor.
-        Tile(terrain[map.Theme],world.transform,new Rect(-6,-5.5f,108,4),-2,true);
-        Boundary(-6);Boundary(102);
-        WorldInteraction npc=Interact("Resident",castItems[map.Npc],new Vector2(map.Boss?90:7,-.5f),WorldInteraction.Kind.Npc);
+        Tile(terrain[map.Theme],world.transform,new Rect(-6,-5.5f,Width+8,4),-2,true);
+        Boundary(-6);Boundary(Width+2);
+        WorldInteraction npc=Interact("Resident",castItems[map.Npc],new Vector2(map.Boss?Width-10:7,-.5f),WorldInteraction.Kind.Npc);
         npc.label=map.Id==39?"戈登博士":CampaignCatalog.NpcNames[map.Npc];
-        WorldInteraction portal=Interact("Time gate",castItems[12],new Vector2(96,.1f),WorldInteraction.Kind.Exit);
+        WorldInteraction portal=Interact("Time gate",castItems[12],new Vector2(Width-4,.1f),WorldInteraction.Kind.Exit);
         portal.label="下一地区";portal.transform.localScale=Vector3.one*.7f;
         portal.gameObject.AddComponent<TimeGateEffect>();
         if(!map.Safe)
         {
             int count=6;
-            for(int i=0;i<count;i++)SpawnEnemy(20+i*11,map.Species,false);
-            if(map.Boss)hud.boss=SpawnEnemy(87,map.Species<0?-2:map.Species,true);
+            for(int i=0;i<count;i++)SpawnEnemy(13+(i+1)*(Width-31)/7,map.Species,false);
+            if(map.Boss)hud.boss=SpawnEnemy(Width-13,map.Species<0?-2:map.Species,true);
             else hud.boss=null;
         }
         else hud.boss=null;
@@ -57,7 +60,7 @@ public class CampaignStageGenerator : MonoBehaviour
             {
                 string key="pickup."+map.Id+"."+quest.Id+"."+i;
                 if(GameSave.GetInt(key,0)!=0)continue;
-                float x=13+(pickup++*13)%74;
+                float x=13+(pickup++*13)%(Width-26);
                 var go=new GameObject(CampaignCatalog.ItemNames[quest.Item]);go.transform.SetParent(world.transform,false);go.transform.position=new Vector3(x,.1f,0);
                 var renderer=go.AddComponent<SpriteRenderer>();renderer.sprite=castItems[8+quest.Item];renderer.sortingOrder=3;
                 go.transform.localScale=Vector3.one*.35f;
@@ -65,7 +68,7 @@ public class CampaignStageGenerator : MonoBehaviour
                 var item=go.AddComponent<WorldPickup2D>();item.item=quest.Item;item.saveKey=key;
             }
         }
-        var camera=Camera.main.GetComponent<CameraFollow2D>();camera.worldLeft=-6;camera.worldRight=102;camera.maximumX=100;
+        var camera=Camera.main.GetComponent<CameraFollow2D>();camera.worldLeft=-6;camera.worldRight=Width+2;camera.maximumX=Width;
     }
     void Ground(string name,Vector2 position,Vector2 size,bool oneWay)
     {

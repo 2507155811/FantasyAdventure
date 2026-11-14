@@ -20,6 +20,8 @@ with tempfile.TemporaryDirectory(prefix='fantasy-input-contracts-') as directory
                root / 'Assets/Scripts/Runtime/GameplayViewport.cs']
     if os.environ.get('CAMPAIGN_CONTRACTS'):
         sources = [root / 'Tests/CampaignContracts.cs'] + [root / ('Assets/Scripts/Runtime/' + name + '.cs') for name in ['CampaignCatalog', 'CampaignQuestLog', 'GameSave']]
+    if os.environ.get('CAMPAIGN_FLOW_CONTRACTS'):
+        sources = [root / 'Tests/CampaignFlowContracts.cs'] + [root / ('Assets/Scripts/Runtime/' + name + '.cs') for name in ['CampaignCatalog', 'CampaignQuestLog', 'GameSave', 'CampaignInventory', 'ChapterOne']]
     args = ['/nologo', '/target:exe', '/nostdlib+', f'/out:"{output}"']
     args += [f'/reference:"{p}"' for p in runtime.glob('*.dll')]
     args += [f'"{p}"' for p in sources]

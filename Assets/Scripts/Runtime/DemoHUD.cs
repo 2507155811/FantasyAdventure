@@ -93,7 +93,7 @@ public partial class DemoHUD : MonoBehaviour
         {
             Panel(new Rect(290+cx,106,700,60)); GUI.Label(new Rect(307+cx,116,670,46),message,label);
         }
-        if (boss && !boss.IsDead && player.transform.position.x > 75)
+        if (boss && !boss.IsDead && Mathf.Abs(player.transform.position.x-boss.transform.position.x)<13)
         {
             Panel(new Rect(390+cx,190,500,52));
             float fraction = Mathf.Clamp01((float)boss.Health/boss.maxHealth);

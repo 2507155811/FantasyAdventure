@@ -183,16 +183,7 @@ public partial class DemoHUD
     void Resident(float cx)
     {
         GUI.Label(new Rect(190+cx,190,880,50),resident,title);
-        string[] text={
-            "先替奶奶准备好苹果，再沿着森林向前。旅途中记得和居民交谈，收集散落的物品。",
-            "机器被卷入了陌生的时代。找回齿轮，帮助这里的人们，寻找修复时间线路的方法。",
-            "城外的道路并不安全。击退沿途敌人，救助被困的人，下一段路会通向新的线索。",
-            "村庄、葡萄园与城堡都受到战乱影响。帮助居民完成委托，向圣地寻找答案。",
-            "圣地的回廊连接着更深的地下。留意收集物品，准备好药水，再挑战守卫。",
-            "地下敌人擅长突然袭击。看清蓄力，跳跃避开攻击，别在技能冷却时硬拼。",
-            "时间线路中困着许多人。找到他们，取回结晶；奶奶就在前方，最后的守卫也在等待。",
-            "时间的扭曲在这里汇聚。完成尚未结束的委托，击败守卫，让所有人平安回家。"};
-        GUI.Label(new Rect(220+cx,275,820,150),text[ChapterOne.Instance.Map.Theme],label);
+        GUI.Label(new Rect(220+cx,265,820,165),CampaignStory.Dialogue(ChapterOne.Instance.Map),label);
         GUI.Label(new Rect(220+cx,435,820,55),ChapterOne.Instance.Objective,label);
         if(Button(new Rect(220+cx,520,250,60),"旅途补给"))menuTab=5;
         if(Button(new Rect(515+cx,520,250,60),"查看委托"))menuTab=3;

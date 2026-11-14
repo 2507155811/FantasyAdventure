@@ -9,7 +9,7 @@ public static class DemoLevelBuilder
     [MenuItem("Fantasy Adventure/Build Demo Level")]
     public static void Build()
     {
-        Directory.CreateDirectory("Assets/Scenes");ActorAtlasImporter.BeginBuild();HeroAtlasBaker.Bake();
+        Directory.CreateDirectory("Assets/Scenes");ActorAtlasImporter.BeginBuild();HeroAtlasBaker.Bake();ApplicationArtworkBaker.Bake();
         var scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
         var camera=new GameObject("Main Camera").AddComponent<Camera>();camera.orthographic=true;camera.orthographicSize=4.8f;
         camera.gameObject.tag="MainCamera";camera.transform.position=new Vector3(5,2,-10);camera.backgroundColor=new Color(.55f,.75f,.65f);

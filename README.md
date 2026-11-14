@@ -20,4 +20,4 @@ Unity 6000.0.40f1 + C# 的 Android 横版动作 RPG。当前 0.3.0 扩展为完�
 
 ## 验证
 
-Tests/run_input_contracts.py 使用 Unity 附带的 .NET 编译器运行输入、攻击时机及屏幕布局契约。设置 CAMPAIGN_CONTRACTS=1 时运行所有地区的任务数据与存档契约。静态契约通过不等于手机实机通关，触感、音量和视觉接缝仍需设备验收。
+Tests/run_input_contracts.py 使用 Unity 附带的 .NET 编译器运行输入、攻击时机及屏幕布局契约。设置 CAMPAIGN_CONTRACTS=1 时运行所有地区的任务数据与存档契约。设置 CAMPAIGN_FLOW_CONTRACTS=1 时验证实际流程管理器从开局到结局、地下挑战及继续存档的状态推进。物理与画面在此检查中使用替身。静态契约通过不等于手机实机通关，触感、音量和视觉接缝仍需设备验收。
