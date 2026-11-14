@@ -15,7 +15,7 @@ public static class DemoLevelBuilder{
  Enemy("Moss Slime",new Vector2(7,1),slime,45,7,1.8f,false);Enemy("Moss Slime",new Vector2(13,1),slime,55,8,1.9f,false);Enemy("Forest Bat",new Vector2(23,1),slime,65,9,2.2f,false);Enemy("Ancient Forest Guardian",new Vector2(39,1.2f),boss,420,16,1.5f,true);
  new GameObject("Demo HUD and Touch Controls").AddComponent<DemoHUD>();
  EditorSceneManager.SaveScene(scene,ScenePath);EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(ScenePath,true)};Selection.activeObject=AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath);
- EditorUtility.DisplayDialog("Fantasy Adventure","第一关场景已生成！打开 ForestStage01 并点击 Play。键盘：A/D移动、Space跳跃、Shift闪避、J攻击、K技能、H/M药水。","知道了");
+ if(!Application.isBatchMode)EditorUtility.DisplayDialog("Fantasy Adventure","第一关场景已生成！打开 ForestStage01 并点击 Play。键盘：A/D移动、Space跳跃、Shift闪避、J攻击、K技能、H/M药水。","知道了");
  }
  static Sprite MakeSprite(string name,Color main,Color accent){
  int w=64,h=96;var tex=new Texture2D(w,h,TextureFormat.RGBA32,false);Color clear=new Color(0,0,0,0);var p=new Color[w*h];for(int i=0;i<p.Length;i++)p[i]=clear;
