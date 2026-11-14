@@ -24,7 +24,8 @@ public class PlayerController2D : MonoBehaviour {
  public void UseRedPotion(){if(redPotions>0&&health<maxHealth){redPotions--;health=Mathf.Min(maxHealth,health+45);}}
  public void UseBluePotion(){if(bluePotions>0&&mana<maxMana){bluePotions--;mana=Mathf.Min(maxMana,mana+30);}}
  public void TakeDamage(int n){health=Mathf.Max(0,health-n);if(health==0)DemoHUD.ShowMessage("冒险暂时结束！");}
- void OnCollisionEnter2D(Collision2D c){if(c.collider.CompareTag("Ground"))grounded=true;}
- void OnCollisionStay2D(Collision2D c){if(c.collider.CompareTag("Ground"))grounded=true;}
- void OnCollisionExit2D(Collision2D c){if(c.collider.CompareTag("Ground"))grounded=false;}
+ bool IsGround(Collision2D c){return c.collider.GetComponent<GroundPlatform2D>()!=null;}
+ void OnCollisionEnter2D(Collision2D c){if(IsGround(c))grounded=true;}
+ void OnCollisionStay2D(Collision2D c){if(IsGround(c))grounded=true;}
+ void OnCollisionExit2D(Collision2D c){if(IsGround(c))grounded=false;}
 }
