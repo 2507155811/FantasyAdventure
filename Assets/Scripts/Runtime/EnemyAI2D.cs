@@ -3,8 +3,8 @@ using UnityEngine;
 public class EnemyAI2D:MonoBehaviour{
  public int maxHealth=55,contactDamage=8,coinReward=5;public float moveSpeed=2,detectRange=7,attackRange=1.15f,attackInterval=1.2f;public bool isBoss;
  int hp,dir=-1;float timer;Rigidbody2D body;Transform target;bool dead;
- void Awake(){body=GetComponent<Rigidbody2D>();hp=maxHealth;}
- void Start(){var p=FindObjectOfType<PlayerController2D>();if(p)target=p.transform;}
+ void Awake(){body=GetComponent<Rigidbody2D>();}
+ void Start(){hp=maxHealth;var p=FindObjectOfType<PlayerController2D>();if(p)target=p.transform;}
  void Update(){if(dead||!target)return;timer-=Time.deltaTime;float d=Vector2.Distance(transform.position,target.position);
  if(d<=detectRange){dir=target.position.x>=transform.position.x?1:-1;if(d>attackRange)body.velocity=new Vector2(dir*moveSpeed,body.velocity.y);else{body.velocity=new Vector2(0,body.velocity.y);if(timer<=0){var p=target.GetComponent<PlayerController2D>();if(p)p.TakeDamage(contactDamage);timer=attackInterval;}}}
  else body.velocity=new Vector2(dir*moveSpeed*.35f,body.velocity.y);}
