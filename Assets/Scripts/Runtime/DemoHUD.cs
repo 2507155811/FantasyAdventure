@@ -3,6 +3,7 @@ public class DemoHUD:MonoBehaviour{
  static int coins;static string message="森林入口：击败怪物，找到森林守卫！";static float messageUntil;PlayerController2D player;GUIStyle title,label,btn;
  public static void AddCoins(int n){coins+=n;}public static void ShowMessage(string s){message=s;messageUntil=Time.time+4;}
  void OnGUI(){
+ if(Time.time>messageUntil&&messageUntil>0)message="";
  if(!player)player=FindObjectOfType<PlayerController2D>();
  title=new GUIStyle(GUI.skin.label){fontSize=21,fontStyle=FontStyle.Bold,normal={textColor=Color.white}};
  label=new GUIStyle(GUI.skin.label){fontSize=16,normal={textColor=Color.white}};
