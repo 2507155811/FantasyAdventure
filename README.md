@@ -36,3 +36,10 @@
 ## 重要说明
 
 本项目是原创作品，仅参考经典横版动作 RPG 的操作体验与信息布局，不使用其他游戏的角色立绘、地图、音乐、图标或代码。
+
+
+## Android 云端打包
+
+仓库已添加 GitHub Actions 工作流，可在配置 Unity 许可证 Secrets 后自动构建 APK。具体步骤见 [Docs/ANDROID_CLOUD_BUILD.md](Docs/ANDROID_CLOUD_BUILD.md)。
+
+当前自动构建产物是第一关程序生成的测试原型，不代表高清美术与完整游戏已完成；APK 还需要在安卓设备上进行实际测试。
