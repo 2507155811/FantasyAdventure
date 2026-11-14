@@ -21,6 +21,8 @@ public static class FantasyAndroidBuild
 
         PlayerSettings.companyName = "Fantasy Adventure Studio";
         PlayerSettings.productName = "Fantasy Adventure";
+        PlayerSettings.bundleVersion = "0.2.0";
+        PlayerSettings.Android.bundleVersionCode = 2;
         PlayerSettings.applicationIdentifier = "com.fantasyadventure.game";
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
         PlayerSettings.allowedAutorotateToLandscapeLeft = true;

@@ -1,45 +1,22 @@
 # 幻想冒险：异世界之旅
 
-一款面向 Android 的原创 2D 横版动作 RPG，使用 Unity + C# 开发。
+面向 Android 的原创 2D 横版动作 RPG，使用 Unity 6000.0.40f1 + C# 开发。
 
-## 项目目标
+当前开发内容为第一大关「森林净化」：森林入口、林间古道、守卫遗迹，包含角色动作、森林美术、普通敌人与首领、检查点、单武器装备及品质升级、药瓶式生命/魔法 HUD 和本地进度保存。
 
-- 单机离线游玩，横屏，适配不同手机屏幕比例
-- 精致高清 2D 卡通美术，原创角色、怪物、场景与 UI
-- 左侧虚拟摇杆移动，右侧攻击、技能、跳跃与闪避
-- 双武器切换，不同武器拥有独立动作与技能
-- 主线章节、支线任务、隐藏区域、精英怪与 BOSS
-- 装备掉落、随机词条、强化、背包、图鉴
-- 自动存档、手动存档与多个本地存档槽
-- 不包含解谜玩法，不包含宠物系统
+## 开发
 
-## 当前开发阶段
+1. 安装 Unity 6000.0.40f1 和 Android Build Support（SDK、NDK、OpenJDK）。
+2. 用 Unity 打开仓库。
+3. 选择 Fantasy Adventure → Build Demo Level 生成第一大关场景。
+4. 运行场景；Android 构建入口为 FantasyAndroidBuild.Build。
 
-**阶段 0：项目规划与基础代码骨架**
+操作及内容见 [第一大关说明](Docs/FIRST_LEVEL_DEMO_GUIDE.md)。美术规则见 [ART_DIRECTION](Docs/ART_DIRECTION.md)。
 
-目前仓库包含游戏设计文档、美术规范和 Unity 脚本起步代码。场景、角色素材、动画、音效与 Android APK 需要在 Unity 编辑器中继续组装和测试。
+## Android APK
 
-## 使用方式
+[Android APK Build](https://github.com/2507155811/FantasyAdventure/actions/workflows/android-apk.yml) 在 main 分支相关文件变更时自动运行，也可手动触发。
 
-1. 在电脑安装 Unity Hub。
-2. 安装 Unity 6 LTS，并勾选 Android Build Support、Android SDK & NDK Tools、OpenJDK。
-3. 将本仓库克隆到电脑，使用 Unity Hub 打开项目目录（待补齐 Unity 项目设置与首个场景后）。
-4. 按 `Docs/DEVELOPMENT_ROADMAP.md` 的顺序开发和验证。
+构建依赖仓库 Actions Secrets 中的 UNITY_LICENSE、UNITY_EMAIL、UNITY_PASSWORD。成功后，在对应运行页底部 Artifacts 下载 FantasyAdventure-Android-APK，解压取得 APK。
 
-## 目录
-
-- `Assets/Scripts/`：游戏 C# 脚本
-- `Docs/GAME_DESIGN.md`：玩法与系统设计
-- `Docs/ART_GUIDE.md`：AI 美术素材规范
-- `Docs/DEVELOPMENT_ROADMAP.md`：开发路线与验收标准
-
-## 重要说明
-
-本项目是原创作品，仅参考经典横版动作 RPG 的操作体验与信息布局，不使用其他游戏的角色立绘、地图、音乐、图标或代码。
-
-
-## Android 云端打包
-
-仓库已添加 GitHub Actions 工作流，可在配置 Unity 许可证 Secrets 后自动构建 APK。具体步骤见 [Docs/ANDROID_CLOUD_BUILD.md](Docs/ANDROID_CLOUD_BUILD.md)。
-
-当前自动构建产物是第一关程序生成的测试原型，不代表高清美术与完整游戏已完成；APK 还需要在安卓设备上进行实际测试。
+目前完整打包结果以对应提交的 Actions 结果为准；安卓设备上的视觉、动作和操作效果仍需真机检查。请勿把密码或许可证内容写进代码、日志或聊天。
