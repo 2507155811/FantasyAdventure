@@ -12,6 +12,8 @@ Unity 6000.0.40f1 + C# 的 Android 横版动作 RPG。当前 0.3.0 扩展为完�
 
 [Android APK Build](https://github.com/2507155811/FantasyAdventure/actions/workflows/android-apk.yml) 在 main 分支变更后自动运行。成功运行底部下载 FantasyAdventure-Android-APK，解压取得 APK。构建所需 Unity 账户和许可证只保存在 Actions Secrets。
 
+[下载 0.3.0 APK](https://github.com/2507155811/FantasyAdventure/releases/download/v0.3.0-9c258cb/FantasyAdventure.apk)（约 44 MB）；[构建与验证记录](Docs/VERIFICATION_030.md)。
+
 ## 操作
 
 左下四向方向盘：左右移动，上下爬梯；上键与居民交谈或进入出口；下 + 跳跃穿过单向平台。右侧为跳跃、攻击、技能，支持多指同时操作。装备菜单内更换武器，战斗时只装备一种。键盘支持方向键、空格、J 攻击、K 技能。
