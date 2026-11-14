@@ -14,6 +14,7 @@ public static class ForestSceneryBuilder
         var importer = (TextureImporter)AssetImporter.GetAtPath(path);
         if (importer == null) throw new FileNotFoundException("Missing approved forest atlas", path);
         importer.textureType = TextureImporterType.Default;
+        importer.npotScale = TextureImporterNPOTScale.None;
         importer.alphaIsTransparency = true;
         importer.mipmapEnabled = false;
         importer.maxTextureSize = 4096;

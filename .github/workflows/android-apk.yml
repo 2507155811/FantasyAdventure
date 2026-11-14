@@ -37,6 +37,35 @@ jobs:
           buildName: FantasyAdventure
           versioning: None
 
+      - name: Explain Unity build errors
+        if: failure()
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import re
+          path = Path('build/unity-errors.log')
+          if not path.exists():
+              print('::warning::Unity did not produce an editor error report; inspect the Build with Unity log.')
+          else:
+              lines = path.read_text(errors='replace').splitlines()
+              for line in lines[:60]:
+                  if not line.strip():
+                      continue
+                  line = re.sub(r'(?i)(password|token|secret|serial|license)\s*[:=]\s*\S+', r'\1=[REDACTED]', line)
+                  line = line.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  print('::error title=Unity build diagnostic::' + line[:1500])
+          PYTHON
+
+      - name: Upload Unity error report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unity-build-errors
+          path: build/unity-errors.log
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

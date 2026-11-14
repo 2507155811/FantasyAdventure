@@ -50,7 +50,7 @@ public static class DemoLevelBuilder
     {
         var importer=(TextureImporter)AssetImporter.GetAtPath(path);
         if(importer==null)throw new FileNotFoundException("Required finished artwork missing",path);
-        importer.textureType=TextureImporterType.Default;importer.alphaIsTransparency=true;
+        importer.textureType=TextureImporterType.Default;importer.npotScale=TextureImporterNPOTScale.None;importer.alphaIsTransparency=true;
         importer.mipmapEnabled=false;importer.maxTextureSize=4096;
         importer.textureCompression=TextureImporterCompression.Uncompressed;
         importer.wrapMode=TextureWrapMode.Clamp;importer.SaveAndReimport();
