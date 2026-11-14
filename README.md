@@ -1,22 +1,23 @@
 # 幻想冒险：异世界之旅
 
-面向 Android 的原创 2D 横版动作 RPG，使用 Unity 6000.0.40f1 + C# 开发。
+Unity 6000.0.40f1 + C# 的 Android 横版动作 RPG。当前 0.3.0 扩展为完整单机流程：主菜单、三档存档、46 地区主线路线、21 个探索/挑战地区、99 条任务记录、四类武器及品质形态、技能与被动成长、商店、结局和通关后地下挑战。
 
-当前开发内容为第一大关「森林净化」：森林入口、林间古道、守卫遗迹，包含角色动作、森林美术、普通敌人与首领、检查点、单武器装备及品质升级、药瓶式生命/魔法 HUD 和本地进度保存。
+这是参考《小红帽穿越记》制作的改编实现。地区和任务名称依据用户提供的安装包整理；地图布局、任务触发、对白及数值由本项目重建，不代表原作逐项复刻。实际完成度与验证边界见 [版本说明](Docs/CAMPAIGN_030.md)。
 
-## 开发
+## 开发与构建
 
-1. 安装 Unity 6000.0.40f1 和 Android Build Support（SDK、NDK、OpenJDK）。
-2. 用 Unity 打开仓库。
-3. 选择 Fantasy Adventure → Build Demo Level 生成第一大关场景。
-4. 运行场景；Android 构建入口为 FantasyAndroidBuild.Build。
+1. 安装 Unity 6000.0.40f1 和 Android Build Support。
+2. 打开仓库，选择 Fantasy Adventure → Build Demo Level，生成包含整个单机流程的启动场景。此菜单保留旧名称以兼容原有构建入口。
+3. Android 构建入口为 FantasyAndroidBuild.Build。图集切片、主角动作合并与场景引用在构建时自动生成。
 
-操作及内容见 [第一大关说明](Docs/FIRST_LEVEL_DEMO_GUIDE.md)。美术规则见 [ART_DIRECTION](Docs/ART_DIRECTION.md)。
+[Android APK Build](https://github.com/2507155811/FantasyAdventure/actions/workflows/android-apk.yml) 在 main 分支变更后自动运行。成功运行底部下载 FantasyAdventure-Android-APK，解压取得 APK。构建所需 Unity 账户和许可证只保存在 Actions Secrets。
 
-## Android APK
+## 操作
 
-[Android APK Build](https://github.com/2507155811/FantasyAdventure/actions/workflows/android-apk.yml) 在 main 分支相关文件变更时自动运行，也可手动触发。
+左下四向方向盘：左右移动，上下爬梯；上键与居民交谈或进入出口；下 + 跳跃穿过单向平台。右侧为跳跃、攻击、技能，支持多指同时操作。装备菜单内更换武器，战斗时只装备一种。键盘支持方向键、空格、J 攻击、K 技能。
 
-构建依赖仓库 Actions Secrets 中的 UNITY_LICENSE、UNITY_EMAIL、UNITY_PASSWORD。成功后，在对应运行页底部 Artifacts 下载 FantasyAdventure-Android-APK，解压取得 APK。
+界面跟随横屏安全区域，兼容不同长宽比。三档存档隔离，自动记录任务、检查点、金币、物品与成长；旧版存档仅迁移金币、经验与武器成长。
 
-目前完整打包结果以对应提交的 Actions 结果为准；安卓设备上的视觉、动作和操作效果仍需真机检查。请勿把密码或许可证内容写进代码、日志或聊天。
+## 验证
+
+Tests/run_input_contracts.py 使用 Unity 附带的 .NET 编译器运行输入、攻击时机及屏幕布局契约。设置 CAMPAIGN_CONTRACTS=1 时运行所有地区的任务数据与存档契约。静态契约通过不等于手机实机通关，触感、音量和视觉接缝仍需设备验收。

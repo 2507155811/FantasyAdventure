@@ -5,7 +5,8 @@ public class EnemyAI2D : MonoBehaviour
 {
     public int maxHealth = 55, contactDamage = 8, coinReward = 8;
     public float moveSpeed = 2, detectRange = 8, attackRange = 1.4f, attackInterval = 1.4f;
-    public bool isBoss;
+    public bool isBoss,isTraining;
+    public int species=-1;
     public bool IsDead { get; private set; }
     public int Health { get { return hp; } }
     public bool WindingUp { get { return windup > 0; } }
@@ -24,11 +25,12 @@ public class EnemyAI2D : MonoBehaviour
     }
     void Update()
     {
+        if(isTraining){body.linearVelocity=new Vector2(0,body.linearVelocity.y);return;}
         if (IsDead || !target || target.health <= 0 || ChapterOne.Instance && (ChapterOne.Instance.MenuOpen || ChapterOne.Instance.Completed))
         { body.linearVelocity = new Vector2(0, body.linearVelocity.y); return; }
         cooldown -= Time.deltaTime; stagger -= Time.deltaTime;
         float distance = Vector2.Distance(transform.position, target.transform.position);
-        direction = target.transform.position.x >= transform.position.x ? 1 : -1;
+        if(windup<=0)direction = target.transform.position.x >= transform.position.x ? 1 : -1;
         if (windup > 0)
         {
             windup -= Time.deltaTime;
@@ -36,7 +38,9 @@ public class EnemyAI2D : MonoBehaviour
             if (windup <= 0)
             {
                 float radius = isBoss ? 2.5f : attackRange + .4f;
-                if (distance < radius) target.TakeDamage(contactDamage + (isBoss && hp < maxHealth / 2 ? 4 : 0));
+                if(species==3)MagicBolt2D.FireEnemy(transform.position+Vector3.right*direction*.8f,direction,contactDamage,new Color(.7f,.3f,1));
+                else if(distance<radius)target.TakeDamage(contactDamage+(isBoss&&hp<maxHealth/2?4:0));
+                if(species==0&&isBoss){body.linearVelocity=new Vector2(direction*7,body.linearVelocity.y);stagger=.25f;}
                 CombatEffect2D.Spawn(transform.position, direction, isBoss, new Color(1,.5f,.2f));
                 cooldown = isBoss && hp < maxHealth / 2 ? attackInterval * .7f : attackInterval;
             }
@@ -55,6 +59,10 @@ public class EnemyAI2D : MonoBehaviour
     public void TakeDamage(int amount, int knockDirection)
     {
         if (IsDead) return;
+        GameAudio.Play(GameSound.Hit);
+        if(species==2&&windup<=0&&knockDirection==-direction)amount=Mathf.Max(1,Mathf.RoundToInt(amount*.7f));
+        DamagePopup.Show(transform.position+Vector3.up*.75f,amount);
+        if(isTraining){animation2D.Play("hurt");return;}
         hp = Mathf.Max(0, hp - amount);
         if (hp == 0) { Die(); return; }
         if (!isBoss) { stagger = .18f; windup = 0; body.linearVelocity = new Vector2(knockDirection * 3, 2); }

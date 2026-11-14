@@ -7,6 +7,7 @@ public class ActorVisual2D : MonoBehaviour
     public SpriteRenderer sprite;
     Rigidbody2D body;
     HeroSpriteAnimator2D heroAnimation;
+    PlayerController2D heroPlayer;
     Color baseColor;
     Vector3 baseScale;
     float attackUntil, hurtUntil, dodgeUntil, deathAt = -1;
@@ -15,7 +16,7 @@ public class ActorVisual2D : MonoBehaviour
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-        heroAnimation = GetComponent<HeroSpriteAnimator2D>();
+        heroAnimation = GetComponent<HeroSpriteAnimator2D>();heroPlayer=GetComponent<PlayerController2D>();
         baseScale = visual.localScale;
         baseColor = sprite.color;
     }
@@ -35,6 +36,7 @@ public class ActorVisual2D : MonoBehaviour
     {
         float speed = body ? body.linearVelocity.x : 0;
         if (Mathf.Abs(speed) > .1f) facing = speed > 0 ? 1 : -1;
+        if(heroPlayer)facing=heroPlayer.Facing;
         sprite.flipX = facing < 0;
         if (heroAnimation)
         {

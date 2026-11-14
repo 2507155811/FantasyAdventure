@@ -1,96 +1,70 @@
 using UnityEngine;
 
-// Original procedural glass artwork. Cached liquid levels avoid per-frame allocations.
+// Generated glass frames share one UI atlas; only the liquid is drawn dynamically.
 public sealed class VitalsFlaskHUD
 {
-    const int Steps = 32;
-    readonly Texture2D[,] textures = new Texture2D[2, Steps + 1];
-    GUIStyle caption, value;
-
-    public void Draw(PlayerController2D player, Rect area, Font font = null)
+    const int Steps=32;
+    readonly Texture2D[,] liquids=new Texture2D[2,Steps+1];
+    GUIStyle caption,value;
+    Sprite[] artwork;
+    public void Draw(PlayerController2D player,Rect area,Font font=null,Sprite[] sprites=null)
     {
-        if (caption == null)
+        artwork=sprites;
+        if(caption==null)
         {
-            caption = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter,
-                fontSize = 13, fontStyle = FontStyle.Bold };
-            value = new GUIStyle(caption) { fontSize = 16 };
+            caption=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=13,fontStyle=FontStyle.Bold};
+            value=new GUIStyle(caption){fontSize=16};
             if(font){caption.font=font;value.font=font;}
         }
-        DrawFlask(new Rect(area.x, area.y, area.width * .5f, area.height),
-            0, player.health, player.maxHealth, "生命 HP");
-        DrawFlask(new Rect(area.x + area.width * .5f, area.y, area.width * .5f, area.height),
-            1, player.mana, player.maxMana, "魔法 MP");
+        Flask(new Rect(area.x,area.y,area.width*.5f,area.height),0,player.health,player.maxHealth,"生命 HP");
+        Flask(new Rect(area.x+area.width*.5f,area.y,area.width*.5f,area.height),1,player.mana,player.maxMana,"魔法 MP");
     }
-
-    void DrawFlask(Rect rect, int kind, int current, int maximum, string name)
+    void Flask(Rect target,int kind,int current,int maximum,string name)
     {
-        float ratio = maximum > 0 ? Mathf.Clamp01((float)current / maximum) : 0;
-        int level = Mathf.RoundToInt(ratio * Steps);
-        if (!textures[kind, level]) textures[kind, level] = MakeTexture(kind, level);
-        GUI.DrawTexture(rect, textures[kind, level], ScaleMode.StretchToFill, true);
-        ShadowLabel(new Rect(rect.x, rect.y + rect.height * .46f, rect.width, 24),
-            Mathf.Max(0, current).ToString(), value);
-        ShadowLabel(new Rect(rect.x, rect.y + rect.height * .64f, rect.width, 21),
-            "/ " + maximum, caption);
-        ShadowLabel(new Rect(rect.x, rect.y + rect.height - 15, rect.width, 22), name, caption);
-    }
-
-    static void ShadowLabel(Rect rect, string text, GUIStyle style)
-    {
-        Color previous = GUI.color;
-        GUI.color = new Color(.12f, .07f, .04f, 1);
-        GUI.Label(new Rect(rect.x + 1, rect.y + 2, rect.width, rect.height), text, style);
-        GUI.color = new Color(1, .95f, .78f, 1);
-        GUI.Label(rect, text, style);
-        GUI.color = previous;
-    }
-
-    static Texture2D MakeTexture(int kind, int level)
-    {
-        const int width = 80, height = 96;
-        var pixels = new Color[width * height];
-        Color liquid = kind == 0 ? new Color(.95f, .15f, .045f) : new Color(.03f, .58f, .96f);
-        float surface = 9 + 59f * level / Steps;
-        for (int y = 0; y < height; y++)
-        for (int x = 0; x < width; x++)
+        Rect rect=target;
+        Sprite frame=artwork!=null&&artwork.Length==12?artwork[8+kind]:null;
+        if(frame)
         {
-            float dx = x - 39.5f, dy = y - 38;
-            float radius = Mathf.Sqrt(dx * dx + dy * dy);
-            bool neck = x >= 28 && x <= 51 && y >= 62 && y <= 87;
-            bool rim = x >= 23 && x <= 56 && y >= 80 && y <= 90;
-            if (radius > 36 && !neck && !rim) continue;
-            Color color = new Color(.18f, .13f, .09f);
-            bool inner = radius < 31 || (x >= 33 && x <= 46 && y >= 62 && y <= 84);
-            if (radius >= 33 && radius <= 34 || rim && y >= 83 && y <= 87)
-                color = new Color(.88f, .79f, .52f);
-            if (inner)
-            {
-                color = new Color(.17f, .24f, .24f);
-                if (level > 0 && y <= surface)
-                {
-                    float light = Mathf.Clamp01((x + y) / 110f);
-                    color = Color.Lerp(liquid * .5f, liquid, light);
-                    color.a = 1;
-                    if (Mathf.Abs(y - surface) < 2) color = Color.Lerp(liquid, Color.white, .4f);
-                }
-                // A glass reflection stays visible even when the bottle is empty.
-                float glint = ((x - 20) * (x - 20)) / 12f + ((y - 53) * (y - 53)) / 100f;
-                if (glint < 1) color = Color.Lerp(color, Color.white, .6f);
-            }
-            pixels[y * width + x] = color;
+            float scale=Mathf.Min(target.width/frame.rect.width,target.height/frame.rect.height);
+            float width=frame.rect.width*scale,height=frame.rect.height*scale;
+            rect=new Rect(target.center.x-width*.5f,target.center.y-height*.5f,width,height);
         }
-        var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        texture.name = "Flask_" + kind + "_" + level;
-        texture.filterMode = FilterMode.Bilinear;
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.SetPixels(pixels);
-        texture.Apply(false, true);
-        return texture;
+        int level=Mathf.RoundToInt((maximum>0?Mathf.Clamp01((float)current/maximum):0)*Steps);
+        if(!liquids[kind,level])liquids[kind,level]=Liquid(kind,level);
+        float diameter=rect.width*.76f;
+        var bowl=new Rect(rect.center.x-diameter*.5f,rect.y+rect.height*.66f-diameter*.5f,diameter,diameter);
+        GUI.DrawTexture(bowl,liquids[kind,level],ScaleMode.ScaleToFit,true);
+        if(frame)HudArtwork.Draw(rect,frame);
+        Label(new Rect(rect.x,rect.y+rect.height*.54f,rect.width,24),Mathf.Max(0,current).ToString(),value);
+        Label(new Rect(rect.x,rect.y+rect.height*.72f,rect.width,21),"/ "+maximum,caption);
+        Label(new Rect(target.x,target.yMax+3,target.width,22),name,caption);
     }
-
-    public void Dispose()
+    static void Label(Rect rect,string text,GUIStyle style)
     {
-        foreach (Texture2D texture in textures)
-            if (texture) Object.Destroy(texture);
+        Color previous=GUI.color;GUI.color=new Color(.1f,.05f,.03f);
+        GUI.Label(new Rect(rect.x+1,rect.y+2,rect.width,rect.height),text,style);
+        GUI.color=new Color(1,.96f,.82f);GUI.Label(rect,text,style);GUI.color=previous;
     }
+    static Texture2D Liquid(int kind,int level)
+    {
+        const int size=64;var pixels=new Color[size*size];
+        Color liquid=kind==0?new Color(.94f,.12f,.035f):new Color(.03f,.55f,.95f);
+        float surface=(size-1)*level/(float)Steps;
+        for(int y=0;y<size;y++)for(int x=0;x<size;x++)
+        {
+            float dx=x-31.5f,dy=y-31.5f;
+            if(dx*dx+dy*dy>31*31)continue;
+            Color color=new Color(.09f,.13f,.14f,.95f);
+            if(level>0&&y<=surface)
+            {
+                color=Color.Lerp(liquid*.5f,liquid,(x+y)/100f);color.a=1;
+                if(Mathf.Abs(y-surface)<1.5f)color=Color.Lerp(liquid,Color.white,.35f);
+            }
+            pixels[y*size+x]=color;
+        }
+        var texture=new Texture2D(size,size,TextureFormat.RGBA32,false);
+        texture.name="Liquid_"+kind+"_"+level;texture.filterMode=FilterMode.Bilinear;texture.wrapMode=TextureWrapMode.Clamp;
+        texture.SetPixels(pixels);texture.Apply(false,true);return texture;
+    }
+    public void Dispose(){foreach(var texture in liquids)if(texture)Object.Destroy(texture);}
 }
