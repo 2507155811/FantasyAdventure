@@ -73,3 +73,32 @@ jobs:
           path: build/Android/*.apk
           if-no-files-found: error
           retention-days: 14
+
+  publish-download:
+    name: Publish APK download
+    needs: build-android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release notes
+        uses: actions/checkout@v4
+      - name: Download verified build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: FantasyAdventure-Android-APK
+          path: release-apk
+      - name: Publish downloadable preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          release_tag="v0.3.0-${GITHUB_SHA:0:7}"
+          if gh release view "$release_tag" >/dev/null 2>&1; then
+            gh release upload "$release_tag" release-apk/FantasyAdventure.apk --clobber
+          else
+            gh release create "$release_tag" release-apk/FantasyAdventure.apk \
+              --target "$GITHUB_SHA" --prerelease \
+              --title "0.3.0 单机全流程验收版 (${GITHUB_SHA:0:7})" \
+              --notes-file Docs/RELEASE_030.md
+          fi

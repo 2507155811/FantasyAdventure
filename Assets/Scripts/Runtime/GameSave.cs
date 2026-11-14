@@ -45,6 +45,8 @@ public static class GameSave
         {
             Select(0);
             foreach(string key in new[]{"coins","exp","weapon","tier.0","tier.1","tier.2","tier.3"})SetInt(key,PlayerPrefs.GetInt("FA."+key,0));
+            // Version 0.2 offered every weapon family without an ownership gate.
+            for(int family=1;family<4;family++)SetInt("weaponOwned."+family,1);
             SetInt("map",41);SetInt("route",0);SetInt("checkpoint",0);Save();
         }
         Select(selected);PlayerPrefs.SetInt("FA.migrated",1);PlayerPrefs.Save();

@@ -15,6 +15,8 @@ public class ChapterOne { public static ChapterOne Instance=new ChapterOne(); pu
 public static class CampaignContracts {
  static int checks; static void Check(bool ok,string name){if(!ok)throw new Exception(name);checks++;}
  public static void Main(){
+  UnityEngine.PlayerPrefs.SetInt("FA.coins",77);UnityEngine.PlayerPrefs.SetInt("FA.weapon",3);
+  GameSave.MigrateLegacy();Check(GameSave.GetInt("coins")==77&&GameSave.GetInt("weapon")==3&&GameSave.GetInt("weaponOwned.3")==1,"legacy migration preserves selected weapon ownership");
   Check(CampaignCatalog.Maps.Length==67&&CampaignCatalog.Quests.Length==99,"catalog coverage");
   var unique=new HashSet<int>(); foreach(int id in CampaignCatalog.Route){Check(id>=0&&id<67&&unique.Add(id),"route unique");}
   Check(CampaignCatalog.Route[0]==41&&CampaignCatalog.Route[CampaignCatalog.Route.Length-1]==40,"story endpoints");
